@@ -28,12 +28,12 @@ public class ClientFrame extends JFrame{
 	JPanel pa4=new JPanel();
 //	JButton jb1=new JButton("CONNECT");
 //	JButton jb2=new JButton("DISCONNECT");
-	JLabel label=new JLabel("STATUS: disconnected!");
+	JLabel label=new JLabel("CLIENT       STATUS: disconnected!");
 	JScrollPane sp=null;
 
 	public void launchFrame() {
 		this.setLocation(300,150);
-		this.setSize(400,700);
+		this.setSize(400,400);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
 		sp=new JScrollPane(taContent);

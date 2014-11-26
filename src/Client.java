@@ -1,11 +1,8 @@
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
@@ -18,6 +15,8 @@ public class Client extends UnicastRemoteObject implements IClient {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	public final static String IP="192.168.1.10";
 
 	ClientFrame cf;
 	Thread t;
@@ -32,7 +31,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 		cf.launchFrame();
 		t=new Thread(new Connect());
 		t.start();
-		cf.label.setText("STATUS: connected!");
+		cf.label.setText("CLIENT       STATUS: connected!");
 	}
 
 	static boolean status=false; 
@@ -44,7 +43,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 		public void run() {
 			try {
 				status=true;
-				s = new Socket(InetAddress.getLocalHost().getHostAddress(), 5050);
+				s = new Socket(IP, 5050);
 				dis=new DataInputStream(s.getInputStream());
 				while(status){
 					String s=dis.readUTF();
@@ -68,7 +67,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		cf.label.setText("STATUS: disconnected!");
+		cf.label.setText("CLIENT       STATUS: disconnected!");
 	}
 
 	class FileTransfer implements Runnable{
@@ -77,7 +76,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 		FileOutputStream fos;
 		public FileTransfer(String str){
 			try {
-				s=new Socket(InetAddress.getLocalHost().getHostAddress(), 5050);
+				s=new Socket(IP, 5050);
 			} catch (UnknownHostException e1) {
 				e1.printStackTrace();
 			} catch (IOException e1) {

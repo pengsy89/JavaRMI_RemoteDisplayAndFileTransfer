@@ -26,13 +26,12 @@ public class Server extends JFrame{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	public final static String IP="192.168.1.10";
 	static IClient client;
 	public static void main(String[] args) {
 		try {
 			new Server().start();
-
-			client=(IClient) Naming.lookup("rmi://localhost:1099/Client");
-
+			client=(IClient) Naming.lookup("rmi://"+IP+":1099/Client");
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (NotBoundException e) {
@@ -41,21 +40,15 @@ public class Server extends JFrame{
 	}
 
 	private void start() {
-		startThread();
-		new Thread(new Connect()).start();
+		new Thread(new Accept()).start();
+		new Thread(new Frame()).start();
 	}
 
-	class Connect implements Runnable{
+	class Frame implements Runnable{
 		@Override
 		public void run() {
 			launchFrame();
 		}
-	}
-
-	public void startThread(){
-		Accept a=new Accept();
-		t=new Thread(a);
-		t.start();
 	}
 
 	DataOutputStream dos;
@@ -84,13 +77,13 @@ public class Server extends JFrame{
 	JPanel pa4=new JPanel();
 	JButton jb1=new JButton("CONNECT");
 	JButton jb2=new JButton("DISCONNECT");
-	JLabel label=new JLabel("STATUS: disconnected!");
+	JLabel label=new JLabel("SERVER       STATUS: disconnected!");
 	JScrollPane sp=null;
 	String printString="";
 
 	public void launchFrame() {
 		this.setLocation(300,150);
-		this.setSize(400,700);
+		this.setSize(400,400);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
 		sp=new JScrollPane(taContent);
@@ -111,7 +104,7 @@ public class Server extends JFrame{
 				} catch (RemoteException e1) {
 					e1.printStackTrace();
 				}
-				label.setText("STATUS: connected!");
+				label.setText("SERVER       STATUS: connected!");
 			}
 		});
 
@@ -122,9 +115,9 @@ public class Server extends JFrame{
 					dos.close();
 					s.close();
 					client.closeConnection();
-					label.setText("STATUS: disconnected!");
+					label.setText("SERVER       STATUS: disconnected!");
 				} catch (IOException e1) {
-					e1.printStackTrace();
+					//					e1.printStackTrace();
 				}
 			}
 		});
@@ -184,5 +177,4 @@ public class Server extends JFrame{
 			}
 		}
 	}
-
 }
